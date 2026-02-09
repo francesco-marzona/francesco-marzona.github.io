@@ -1,0 +1,48 @@
+% window size
+Lx=0.4;
+Ly=1;
+
+wavenumber = 60;
+   
+% blow up the image by this factor to display better
+factor = 30;
+
+% a small shift to be added below for graph. purposes.
+shift = 1; 
+
+Mx = Lx/2;
+Wy = Ly/2;
+
+M=400;
+N = floor(M*Ly/Lx);
+
+[X, Y] = meshgrid(linspace(-Lx/2, Lx/2, M), linspace(-Ly/2, Ly/2, N));
+
+T = 1;
+nt = 10;
+Time = linspace(0, T, nt);
+
+for repeat = 1:1
+
+   % go over one time period of the field
+   for iter = 1:(nt-1) % nt is same as 1 due to peridicity
+      
+      t = Time(iter);
+
+      Z = real(exp(i*wavenumber*Y)*exp(-i*2*pi*t));
+      
+      % plot the real part of the field Z
+      
+      figure(1); clf; hold on; axis equal; axis off;
+      image(factor*(real(Z+shift))); % add shift to Z for graphing purposes
+      colormap jet; shading interp;
+
+      file = sprintf('Movie_frame%d.eps', 1000+iter);
+      disp(file); %show the frame number we are at
+      saveas(gcf, file, 'psc2') %save the current frame
+      
+      pause(0.1);
+      
+   end
+
+end
